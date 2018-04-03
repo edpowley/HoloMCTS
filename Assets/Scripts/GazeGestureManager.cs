@@ -5,36 +5,36 @@ using UnityEngine.XR.WSA.Input;
 
 public class GazeGestureManager : MonoBehaviour
 {
-	public static GazeGestureManager Instance { get; private set; }
+	public static GazeGestureManager s_instance { get; private set; }
 
 	// Represents the hologram that is currently being gazed at.
-	public GameObject FocusedObject { get; private set; }
+	public GameObject m_focusedObject { get; private set; }
 
-	GestureRecognizer recognizer;
+	GestureRecognizer m_recognizer;
 
 	// Use this for initialization
 	void Awake()
 	{
-		Instance = this;
+		s_instance = this;
 
 		// Set up a GestureRecognizer to detect Select gestures.
-		recognizer = new GestureRecognizer();
-		recognizer.Tapped += (args) =>
+		m_recognizer = new GestureRecognizer();
+		m_recognizer.Tapped += (args) =>
 		{
 			// Send an OnSelect message to the focused object and its ancestors.
-			if (FocusedObject != null)
+			if (m_focusedObject != null)
 			{
-				FocusedObject.SendMessageUpwards("OnTap", SendMessageOptions.DontRequireReceiver);
+				m_focusedObject.SendMessageUpwards("OnTap", SendMessageOptions.DontRequireReceiver);
 			}
 		};
-		recognizer.StartCapturingGestures();
+		m_recognizer.StartCapturingGestures();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
 		// Figure out which hologram is focused this frame.
-		GameObject oldFocusObject = FocusedObject;
+		GameObject oldFocusObject = m_focusedObject;
 
 		// Do a raycast into the world based on the user's
 		// head position and orientation.
@@ -45,28 +45,28 @@ public class GazeGestureManager : MonoBehaviour
 		if (Physics.Raycast(headPosition, gazeDirection, out hitInfo))
 		{
 			// If the raycast hit a hologram, use that as the focused object.
-			FocusedObject = hitInfo.collider.gameObject;
+			m_focusedObject = hitInfo.collider.gameObject;
 		}
 		else
 		{
 			// If the raycast did not hit a hologram, clear the focused object.
-			FocusedObject = null;
+			m_focusedObject = null;
 		}
 
 		// If the focused object changed this frame,
 		// start detecting fresh gestures again.
-		if (FocusedObject != oldFocusObject)
+		if (m_focusedObject != oldFocusObject)
 		{
-			Debug.LogFormat("Focus: {0} -> {1}", oldFocusObject, FocusedObject);
+			Debug.LogFormat("Focus: {0} -> {1}", oldFocusObject, m_focusedObject);
 
 			if (oldFocusObject != null)
 				oldFocusObject.SendMessageUpwards("OnUnfocus", SendMessageOptions.DontRequireReceiver);
 
-			if (FocusedObject != null)
-				FocusedObject.SendMessageUpwards("OnFocus", SendMessageOptions.DontRequireReceiver);
+			if (m_focusedObject != null)
+				m_focusedObject.SendMessageUpwards("OnFocus", SendMessageOptions.DontRequireReceiver);
 
-			recognizer.CancelGestures();
-			recognizer.StartCapturingGestures();
+			m_recognizer.CancelGestures();
+			m_recognizer.StartCapturingGestures();
 		}
 	}
 }
