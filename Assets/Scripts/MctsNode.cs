@@ -15,6 +15,17 @@ public class MctsNode : MonoBehaviour
 	private float m_totalReward = 0;
 	private int m_visits = 0;
 
+	private LineRenderer m_lineRenderer_cached = null;
+	private LineRenderer m_lineRenderer
+	{
+		get
+		{
+			if (m_lineRenderer_cached == null)
+				m_lineRenderer_cached = GetComponent<LineRenderer>();
+			return m_lineRenderer_cached;
+		}
+	}
+
 	// Use this for initialization
 	void Start()
 	{
@@ -65,7 +76,8 @@ public class MctsNode : MonoBehaviour
 		if (m_parent != null)
 		{
 			Vector3[] positions = new Vector3[] { m_parent.transform.position - position, Vector3.zero };
-			GetComponent<LineRenderer>().SetPositions(positions);
+			m_lineRenderer.positionCount = 2;
+			m_lineRenderer.SetPositions(positions);
 		}
 	}
 }
