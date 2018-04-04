@@ -8,10 +8,12 @@ public class Board : MonoBehaviour
 	public MctsNode m_nodePrefab;
 
 	private BoardState m_state = new BoardState();
-	private bool m_waitingForPlayerMove;
+	internal bool m_waitingForPlayerMove;
 
 	public int m_iterations = 50;
 	public int m_iterationsPerFrame = 1;
+
+	private List<MctsNode> m_nodes = new List<MctsNode>();
 
 	// Use this for initialization
 	void Start()
@@ -30,7 +32,7 @@ public class Board : MonoBehaviour
 		}
 	}
 
-	public void TryPlayMove(int cellIndex)
+	public bool TryPlayMove(int cellIndex)
 	{
 		if (m_waitingForPlayerMove)
 		{
@@ -39,8 +41,21 @@ public class Board : MonoBehaviour
 				updateBoard();
 				m_waitingForPlayerMove = false;
 				StartCoroutine(doMCTS());
+				return true;
 			}
 		}
+
+		return false;
+	}
+
+	private void clearNodes()
+	{
+		foreach(MctsNode node in m_nodes)
+		{
+			Destroy(node.gameObject);
+		}
+
+		m_nodes.Clear();
 	}
 
 	private MctsNode createNode(BoardState state, MctsNode parent, int incomingMove)
@@ -74,15 +89,22 @@ public class Board : MonoBehaviour
 			int cy = (incomingMove / 3)-1;
 			position.x += cx * transform.localScale.x * Mathf.Pow(0.25f, node.m_depth - 1);
 			position.y += cy * transform.localScale.y * Mathf.Pow(0.25f, node.m_depth - 1);
+			//const float expansion = 1.1f;
+			//position.x *= Mathf.Pow(expansion, node.m_depth - 1);
+			//position.y *= Mathf.Pow(expansion, node.m_depth - 1);
 		}
 
 		node.setPosition(position);
+
+		m_nodes.Add(node);
 
 		return node;
 	}
 
 	private IEnumerator doMCTS()
 	{
+		clearNodes();
+
 		MctsNode rootNode = createNode(m_state, null, -1);
 
 		for (int t = 0; t < m_iterations; t++)
@@ -124,6 +146,11 @@ public class Board : MonoBehaviour
 			if (t % m_iterationsPerFrame == 0)
 				yield return null;
 		}
+
+		int chosenMove = rootNode.getMostVisitedChild().m_incomingMove;
+		m_state.playMove(chosenMove);
+		updateBoard();
+		m_waitingForPlayerMove = true;
 	}
 }
 

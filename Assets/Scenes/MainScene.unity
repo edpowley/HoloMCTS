@@ -128,6 +128,30 @@ Prefab:
       propertyPath: m_LocalPosition.y
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 4030943297371436, guid: 24dc2ca4472d47841aa43599249f21ed, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030943297371436, guid: 24dc2ca4472d47841aa43599249f21ed, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030943297371436, guid: 24dc2ca4472d47841aa43599249f21ed, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030943297371436, guid: 24dc2ca4472d47841aa43599249f21ed, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030943297371436, guid: 24dc2ca4472d47841aa43599249f21ed, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4030943297371436, guid: 24dc2ca4472d47841aa43599249f21ed, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 24dc2ca4472d47841aa43599249f21ed, type: 2}
   m_IsPrefabParent: 0
@@ -593,8 +617,8 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.4
-  far clip plane: 500
+  near clip plane: 0.1
+  far clip plane: 100
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -710,8 +734,8 @@ MonoBehaviour:
   - {fileID: 1178081527}
   m_nodePrefab: {fileID: 114961376418654914, guid: efc6a6adeaaffba4a9e60fe36f2b3dce,
     type: 2}
-  m_iterations: 50
-  m_iterationsPerFrame: 1
+  m_iterations: 5000
+  m_iterationsPerFrame: 10
 --- !u!1001 &1294008305
 Prefab:
   m_ObjectHideFlags: 0

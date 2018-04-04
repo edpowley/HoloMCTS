@@ -8,17 +8,27 @@ public class BoardCell : MonoBehaviour
 	internal int m_cellIndex = -1;
 	private TextMesh m_text;
 
+	public Material m_focusMaterial, m_unfocusMaterial;
+	private MeshRenderer m_renderer;
+
 	// Use this for initialization
 	void Start()
 	{
+		m_renderer = GetComponent<MeshRenderer>();
+		m_renderer.sharedMaterial = m_unfocusMaterial;
 		m_board = GetComponentInParent<Board>();
 		m_text = GetComponentInChildren<TextMesh>();
 	}
 
-	// Update is called once per frame
-	void Update()
+	public void OnFocus()
 	{
+		if (m_board.m_waitingForPlayerMove)
+			m_renderer.sharedMaterial = m_focusMaterial;
+	}
 
+	public void OnUnfocus()
+	{
+		m_renderer.sharedMaterial = m_unfocusMaterial;
 	}
 
 	public void SetState(int state)
@@ -34,7 +44,8 @@ public class BoardCell : MonoBehaviour
 
 	public void OnTap()
 	{
-		m_board.TryPlayMove(m_cellIndex);
+		if (m_board.TryPlayMove(m_cellIndex))
+			m_renderer.sharedMaterial = m_unfocusMaterial;
 	}
 
 	// For testing without the HoloLens
